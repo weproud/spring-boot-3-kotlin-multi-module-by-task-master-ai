@@ -1,0 +1,1 @@
+rootProject.name = "hello-spring-boot-3-kotlin-by-vibe-coding"
