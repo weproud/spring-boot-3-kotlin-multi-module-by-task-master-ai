@@ -1,5 +1,7 @@
 # Spring Boot 3 Kotlin 애플리케이션 개발 PRD
 
+# task 생성할 때 한국어로 작성
+
 ## 프로젝트 개요
 이 프로젝트는 Spring Boot 3와 Kotlin을 사용하여 현대적인 웹 애플리케이션을 개발하는 것을 목표로 합니다. 
 RESTful API를 제공하고, 데이터베이스와 연동하며, 보안 기능을 갖춘 애플리케이션을 구현합니다.
@@ -106,4 +108,107 @@ tree -Ld 3 .
     └── user
 ```
 
+### 2. app-api 구현
+- domain 단위로 패키지 구성
+```
+├── api
+│   ├── chat
+│   │   └── v1
+│   │       ├── ChatController.kt
+│   │       ├── ChatService.kt
+│   │       └── dto
+│   │           └── ChatResponse.kt
+│   ├── user
+│   │   └── v1
+│   │       ├── dto
+│   │       │   └── UserResponse.kt
+│   │       ├── UserController.kt
+│   │       └── UserService.kt
+│   └── product 
+│       └── v1
+│           ├── ProductController.kt
+│           └── ProductService.kt
+```
+- Security 설정(UserDetails, )
+- AOP(ServletRequest logging)
+- CORS 
+- Audit
+- Timezone: Asia/Seoul
+- ApiException
+1. 각 도메인별로 ApiException을 상속받아서 구현
+2. EnumStatus 활용하지 말것
+```
+/**
+ * Api 예외 클래스
+ */
+class ApiException(
+    val errorCode: ErrorCode,
+    override val message: String = errorCode.message,
+    val data: Any? = null,
+    cause: Throwable? = null
+) : RuntimeException(message, cause) {
+    
+    /**
+     * HTTP 상태 코드 반환
+     */
+    fun getStatusCode(): Int {
+        return errorCode.status.value()
+    }
+}
+```
 
+- ObjectMapper 
+```
+object ObjectMapperFactory {
+    fun objectMapper(): ObjectMapper =
+        jacksonObjectMapper()
+            .findAndRegisterModules()
+            .registerKotlinModule()
+            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            .configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false)
+            .configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true)
+            .registerModule(
+                JavaTimeModule()
+                    .addSerializer(ZonedDateTime::class.java, ZonedDateTimeSerializer())
+                    .addDeserializer(ZonedDateTime::class.java, ZonedDateTimeDeserializer()),
+            )
+
+    private class ZonedDateTimeSerializer : StdSerializer<ZonedDateTime>(ZonedDateTime::class.java) {
+        @Throws(IOException::class)
+        override fun serialize(
+            value: ZonedDateTime,
+            generator: JsonGenerator,
+            provider: SerializerProvider,
+        ) {
+            generator.writeString(
+                value.truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+            )
+        }
+    }
+
+    private class ZonedDateTimeDeserializer : StdDeserializer<ZonedDateTime>(ZonedDateTime::class.java) {
+        @Throws(IOException::class)
+        override fun deserialize(
+            parser: JsonParser,
+            context: DeserializationContext,
+        ): ZonedDateTime {
+            return InstantDeserializer.ZONED_DATE_TIME.deserialize(parser, context)
+                .withZoneSameInstant(ZoneId.of("Asia/Seoul"))
+        }
+    }
+}
+```
+
+- ApiResponse: Response wrapping
+```
+data class BaseResponse<T>(
+    val message: String = "ok",
+    val data: T? = null,
+) {
+    companion object {
+        fun <T> ok(data: T? = null): BaseResponse<T> = BaseResponse(data = data)
+    }
+}
+```

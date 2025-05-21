@@ -1,6 +1,6 @@
 # Task ID: 1
 # Title: Setup Gradle Multi-Module Project Structure
-# Status: pending
+# Status: done
 # Dependencies: None
 # Priority: high
 # Description: Initialize the project with Gradle multi-module structure as specified in the PRD
@@ -33,7 +33,7 @@ Setup build.gradle.kts files for each module with necessary dependencies.
 Verify the project structure using Gradle tasks. Ensure all modules are recognized and can be built independently.
 
 # Subtasks:
-## 1. Initialize Root Project with Gradle [pending]
+## 1. Initialize Root Project with Gradle [done]
 ### Dependencies: None
 ### Description: Set up the root project with Gradle and create the base build.gradle.kts file with common configurations and plugins
 ### Details:
@@ -43,7 +43,7 @@ Verify the project structure using Gradle tasks. Ensure all modules are recogniz
 4. Define project-wide properties and versions
 5. Configure Gradle wrapper
 
-## 2. Create Core and Domain Modules [pending]
+## 2. Create Core and Domain Modules [done]
 ### Dependencies: 1.1
 ### Description: Set up the core module and domain modules (common, rds) with their respective build files and dependencies
 ### Details:
@@ -53,7 +53,7 @@ Verify the project structure using Gradle tasks. Ensure all modules are recogniz
 4. Set up package structure within each module
 5. Define domain entities and core interfaces
 
-## 3. Implement Framework Module and Submodules [pending]
+## 3. Implement Framework Module and Submodules [done]
 ### Dependencies: 1.2
 ### Description: Create the framework module with client (ai, base, kakao), provider (jwt), and redis submodules
 ### Details:
@@ -64,7 +64,7 @@ Verify the project structure using Gradle tasks. Ensure all modules are recogniz
 5. Configure build.gradle.kts for each module with appropriate dependencies
 6. Implement basic interfaces and classes for each framework component
 
-## 4. Create HTTP Module with API Endpoints [pending]
+## 4. Create HTTP Module with API Endpoints [done]
 ### Dependencies: 1.3
 ### Description: Set up the http module with admin, teacher, and user submodules for API endpoints
 ### Details:
@@ -75,7 +75,7 @@ Verify the project structure using Gradle tasks. Ensure all modules are recogniz
 5. Set up request/response DTOs
 6. Configure HTTP-specific configurations
 
-## 5. Implement App Modules with API Configurations [pending]
+## 5. Implement App Modules with API Configurations [done]
 ### Dependencies: 1.2, 1.3, 1.4
 ### Description: Create the app module with app-api and app-admin-api submodules that tie together all other modules
 ### Details:
@@ -86,7 +86,7 @@ Verify the project structure using Gradle tasks. Ensure all modules are recogniz
 5. Set up Spring Boot configurations
 6. Configure application properties for different environments
 
-## 6. Set Up Documentation Module and Integration Tests [pending]
+## 6. Set Up Documentation Module and Integration Tests [done]
 ### Dependencies: 1.5
 ### Description: Create the docs module and implement integration tests to verify the multi-module structure
 ### Details:

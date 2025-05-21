@@ -1,0 +1,31 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/plain
+    min-response-size: 1024
+
+spring:
+  application:
+    name: app-api
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+jwt:
+  secret: verySecretKeyThatShouldBeAtLeast32BytesLongForHS256Algorithm
+  expiration: 86400000 # 24시간
+
+kakao:
+  client-id: your-kakao-client-id
+  client-secret: your-kakao-client-secret
+  redirect-uri: http://localhost:8080/api/auth/kakao/callback
+
+ai:
+  api-key: your-ai-api-key
+  api-url: https://api.example.com/ai/completion

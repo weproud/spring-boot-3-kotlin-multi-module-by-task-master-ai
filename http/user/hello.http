@@ -1,0 +1,3 @@
+### Hello World 요청
+GET http://localhost:8080/api/hello
+Accept: application/json

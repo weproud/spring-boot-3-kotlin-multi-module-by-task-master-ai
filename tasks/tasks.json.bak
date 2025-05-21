@@ -8,8 +8,75 @@
       "testStrategy": "Verify the project structure using Gradle tasks. Ensure all modules are recognized and can be built independently.",
       "priority": "high",
       "dependencies": [],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Initialize Root Project with Gradle",
+          "description": "Set up the root project with Gradle and create the base build.gradle.kts file with common configurations and plugins",
+          "dependencies": [],
+          "details": "1. Create a new Gradle project\n2. Configure settings.gradle.kts to include all modules\n3. Set up the root build.gradle.kts with common dependencies, repositories, and plugin configurations\n4. Define project-wide properties and versions\n5. Configure Gradle wrapper",
+          "status": "done",
+          "testStrategy": "Verify Gradle initialization with './gradlew --version' and ensure build configuration is valid"
+        },
+        {
+          "id": 2,
+          "title": "Create Core and Domain Modules",
+          "description": "Set up the core module and domain modules (common, rds) with their respective build files and dependencies",
+          "dependencies": [
+            1
+          ],
+          "details": "1. Create the core module directory structure\n2. Create the domain module with common and rds submodules\n3. Configure build.gradle.kts for each module with appropriate dependencies\n4. Set up package structure within each module\n5. Define domain entities and core interfaces",
+          "status": "done",
+          "testStrategy": "Run './gradlew :core:build' and './gradlew :domain:common:build' to verify module configuration"
+        },
+        {
+          "id": 3,
+          "title": "Implement Framework Module and Submodules",
+          "description": "Create the framework module with client (ai, base, kakao), provider (jwt), and redis submodules",
+          "dependencies": [
+            2
+          ],
+          "details": "1. Set up the framework module directory structure\n2. Create client submodules (ai, base, kakao)\n3. Create provider submodule with jwt implementation\n4. Set up redis module\n5. Configure build.gradle.kts for each module with appropriate dependencies\n6. Implement basic interfaces and classes for each framework component",
+          "status": "done",
+          "testStrategy": "Verify module structure with './gradlew :framework:client:base:build' and other submodule build commands"
+        },
+        {
+          "id": 4,
+          "title": "Create HTTP Module with API Endpoints",
+          "description": "Set up the http module with admin, teacher, and user submodules for API endpoints",
+          "dependencies": [
+            3
+          ],
+          "details": "1. Create the http module directory structure\n2. Set up admin, teacher, and user submodules\n3. Configure build.gradle.kts for each module with web dependencies\n4. Create basic controller structures\n5. Set up request/response DTOs\n6. Configure HTTP-specific configurations",
+          "status": "done",
+          "testStrategy": "Verify module structure and build configuration with './gradlew :http:admin:build' and other submodule build commands"
+        },
+        {
+          "id": 5,
+          "title": "Implement App Modules with API Configurations",
+          "description": "Create the app module with app-api and app-admin-api submodules that tie together all other modules",
+          "dependencies": [
+            2,
+            3,
+            4
+          ],
+          "details": "1. Create the app module directory structure\n2. Set up app-api and app-admin-api submodules\n3. Configure build.gradle.kts with dependencies on all other modules\n4. Create application entry points\n5. Set up Spring Boot configurations\n6. Configure application properties for different environments",
+          "status": "done",
+          "testStrategy": "Run './gradlew :app:app-api:bootRun' to verify application startup and dependency resolution"
+        },
+        {
+          "id": 6,
+          "title": "Set Up Documentation Module and Integration Tests",
+          "description": "Create the docs module and implement integration tests to verify the multi-module structure",
+          "dependencies": [
+            5
+          ],
+          "details": "1. Create the docs module directory structure\n2. Configure build.gradle.kts for documentation generation\n3. Set up API documentation templates\n4. Create integration tests that verify module interactions\n5. Implement a test suite that validates the entire project structure\n6. Create README files for each module explaining its purpose and dependencies",
+          "status": "done",
+          "testStrategy": "Run './gradlew build' to verify the entire project builds successfully and all integration tests pass"
+        }
+      ]
     },
     {
       "id": 2,
@@ -21,7 +88,7 @@
       "dependencies": [
         1
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -35,7 +102,7 @@
         1,
         2
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -48,7 +115,7 @@
       "dependencies": [
         2
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -61,7 +128,7 @@
       "dependencies": [
         4
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -75,7 +142,7 @@
         3,
         5
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": []
     },
     {
@@ -89,8 +156,64 @@
         3,
         5
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Define Service Interfaces in Domain Layer",
+          "description": "Create service interfaces in the domain layer that define the contract for user management operations",
+          "dependencies": [],
+          "details": "Create interfaces for UserService, AuthenticationService, and ProfileService in the domain layer. UserService should define methods for user registration and management. AuthenticationService should define methods for login, logout, and token validation. ProfileService should define methods for profile retrieval and updates. Each interface should use domain entities as parameters and return types.",
+          "status": "done",
+          "testStrategy": "Create unit tests with mock implementations to verify interface contracts are complete and consistent"
+        },
+        {
+          "id": 2,
+          "title": "Implement Repository Dependency Injection",
+          "description": "Set up dependency injection for repositories that will be used by service implementations",
+          "dependencies": [
+            1
+          ],
+          "details": "Create a configuration class that registers repositories as injectable dependencies. Define constructor injection in service implementations to receive repository instances. Use appropriate DI annotations based on the framework (e.g., @Autowired for Spring). Ensure repositories are properly scoped (singleton by default).",
+          "status": "done",
+          "testStrategy": "Write integration tests to verify repositories are properly injected into services"
+        },
+        {
+          "id": 3,
+          "title": "Implement Core User Management Services",
+          "description": "Create concrete service implementations for user registration and authentication",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Implement UserServiceImpl and AuthenticationServiceImpl classes in the data layer. Add business logic for user registration including validation, password hashing, and duplicate checking. Implement login functionality with credential verification and token generation. Add logout functionality to invalidate tokens. Implement proper error handling with domain-specific exceptions.",
+          "status": "done",
+          "testStrategy": "Create unit tests with mocked repositories to verify business logic. Add integration tests for the complete flow."
+        },
+        {
+          "id": 4,
+          "title": "Implement Profile Management Services",
+          "description": "Create concrete service implementations for profile management and password changes",
+          "dependencies": [
+            3
+          ],
+          "details": "Implement ProfileServiceImpl in the data layer. Add methods for retrieving user profiles, updating profile information, and changing passwords. Include validation logic for profile updates and password changes. Implement security checks to ensure users can only access their own profiles unless they have admin privileges.",
+          "status": "done",
+          "testStrategy": "Write unit tests for validation logic and security checks. Create integration tests for profile update and password change flows."
+        },
+        {
+          "id": 5,
+          "title": "Implement Transaction Management",
+          "description": "Add transaction management to service methods to ensure data consistency",
+          "dependencies": [
+            3,
+            4
+          ],
+          "details": "Apply transaction management annotations to service methods that modify data (@Transactional). Configure transaction boundaries and propagation behaviors. Implement proper exception handling to ensure transactions are rolled back on errors. Add logging for transaction events. Consider implementing compensating transactions for complex operations that might fail partially.",
+          "status": "done",
+          "testStrategy": "Create integration tests that verify transaction rollback on errors. Test scenarios with concurrent access to verify isolation levels."
+        }
+      ]
     },
     {
       "id": 8,
@@ -103,8 +226,62 @@
         2,
         6
       ],
-      "status": "pending",
-      "subtasks": []
+      "status": "done",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Add Spring Security dependencies and create basic SecurityConfig",
+          "description": "Add Spring Security and JWT dependencies to the project and create a basic SecurityConfig class with initial configuration",
+          "dependencies": [],
+          "details": "1. Add spring-boot-starter-security, spring-security-test, and jjwt dependencies to pom.xml or build.gradle\n2. Create a SecurityConfig class with @Configuration and @EnableWebSecurity annotations\n3. Set up a basic security configuration with permitAll() for public endpoints\n4. Configure a PasswordEncoder bean using BCryptPasswordEncoder",
+          "status": "done",
+          "testStrategy": "Write a simple test to verify that the application starts with security configuration in place"
+        },
+        {
+          "id": 2,
+          "title": "Implement UserDetailsService and authentication components",
+          "description": "Create a custom UserDetailsService implementation that loads user data from the database and configure authentication manager",
+          "dependencies": [
+            1
+          ],
+          "details": "1. Create a CustomUserDetailsService class implementing UserDetailsService\n2. Implement the loadUserByUsername method to fetch user data from repository\n3. Create User entity with security-related fields (username, password, roles)\n4. Configure AuthenticationManagerBuilder in SecurityConfig to use the custom UserDetailsService\n5. Set up AuthenticationManager bean for JWT authentication",
+          "status": "done",
+          "testStrategy": "Test the UserDetailsService with mock repository data to ensure it correctly loads and transforms user data"
+        },
+        {
+          "id": 3,
+          "title": "Implement JWT authentication components",
+          "description": "Create JWT token generation, validation, and processing components in the framework.provider.jwt module",
+          "dependencies": [
+            2
+          ],
+          "details": "1. Create JwtTokenProvider class to generate and validate JWT tokens\n2. Implement methods for token creation, extraction of username from token, and token validation\n3. Create JwtAuthenticationFilter extending OncePerRequestFilter to process JWT tokens from requests\n4. Configure token expiration, secret key, and token prefix\n5. Implement refresh token functionality if needed",
+          "status": "done",
+          "testStrategy": "Write unit tests for token generation and validation, ensuring tokens contain expected claims and validation correctly identifies expired or invalid tokens"
+        },
+        {
+          "id": 4,
+          "title": "Configure security filters and CSRF protection",
+          "description": "Set up the security filter chain with JWT authentication filter and configure CSRF protection",
+          "dependencies": [
+            3
+          ],
+          "details": "1. Configure SecurityFilterChain bean in SecurityConfig\n2. Add JwtAuthenticationFilter to the filter chain\n3. Configure CSRF protection (disable for stateless JWT auth or configure properly)\n4. Set up security headers for XSS protection\n5. Configure session management to be stateless\n6. Set up exception handling for authentication failures",
+          "status": "done",
+          "testStrategy": "Test API endpoints with and without valid JWT tokens to verify filter chain correctly processes authentication"
+        },
+        {
+          "id": 5,
+          "title": "Implement role-based access control",
+          "description": "Configure role-based authorization for different endpoints and implement method-level security",
+          "dependencies": [
+            4
+          ],
+          "details": "1. Enable method security with @EnableGlobalMethodSecurity in SecurityConfig\n2. Configure antMatchers in SecurityFilterChain to restrict access based on roles\n3. Add @PreAuthorize annotations to controller methods for fine-grained access control\n4. Create custom access denied handler\n5. Implement role hierarchy if needed\n6. Test the complete authentication and authorization flow",
+          "status": "done",
+          "testStrategy": "Create integration tests that verify different user roles can access only their permitted endpoints and are correctly denied access to restricted resources"
+        }
+      ]
     },
     {
       "id": 9,

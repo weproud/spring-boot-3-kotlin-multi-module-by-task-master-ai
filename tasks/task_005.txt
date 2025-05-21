@@ -1,6 +1,6 @@
 # Task ID: 5
 # Title: Implement JPA Entities and Relationships
-# Status: pending
+# Status: done
 # Dependencies: 4
 # Priority: high
 # Description: Design and implement JPA entities with proper relationships

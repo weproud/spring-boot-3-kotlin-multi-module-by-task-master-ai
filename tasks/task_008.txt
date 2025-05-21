@@ -1,6 +1,6 @@
 # Task ID: 8
 # Title: Configure Spring Security
-# Status: pending
+# Status: done
 # Dependencies: 2, 6
 # Priority: high
 # Description: Set up Spring Security for authentication and authorization
@@ -14,3 +14,56 @@
 
 # Test Strategy:
 Write integration tests to verify security configurations, test protected endpoints, and ensure proper authentication and authorization.
+
+# Subtasks:
+## 1. Add Spring Security dependencies and create basic SecurityConfig [done]
+### Dependencies: None
+### Description: Add Spring Security and JWT dependencies to the project and create a basic SecurityConfig class with initial configuration
+### Details:
+1. Add spring-boot-starter-security, spring-security-test, and jjwt dependencies to pom.xml or build.gradle
+2. Create a SecurityConfig class with @Configuration and @EnableWebSecurity annotations
+3. Set up a basic security configuration with permitAll() for public endpoints
+4. Configure a PasswordEncoder bean using BCryptPasswordEncoder
+
+## 2. Implement UserDetailsService and authentication components [done]
+### Dependencies: 8.1
+### Description: Create a custom UserDetailsService implementation that loads user data from the database and configure authentication manager
+### Details:
+1. Create a CustomUserDetailsService class implementing UserDetailsService
+2. Implement the loadUserByUsername method to fetch user data from repository
+3. Create User entity with security-related fields (username, password, roles)
+4. Configure AuthenticationManagerBuilder in SecurityConfig to use the custom UserDetailsService
+5. Set up AuthenticationManager bean for JWT authentication
+
+## 3. Implement JWT authentication components [done]
+### Dependencies: 8.2
+### Description: Create JWT token generation, validation, and processing components in the framework.provider.jwt module
+### Details:
+1. Create JwtTokenProvider class to generate and validate JWT tokens
+2. Implement methods for token creation, extraction of username from token, and token validation
+3. Create JwtAuthenticationFilter extending OncePerRequestFilter to process JWT tokens from requests
+4. Configure token expiration, secret key, and token prefix
+5. Implement refresh token functionality if needed
+
+## 4. Configure security filters and CSRF protection [done]
+### Dependencies: 8.3
+### Description: Set up the security filter chain with JWT authentication filter and configure CSRF protection
+### Details:
+1. Configure SecurityFilterChain bean in SecurityConfig
+2. Add JwtAuthenticationFilter to the filter chain
+3. Configure CSRF protection (disable for stateless JWT auth or configure properly)
+4. Set up security headers for XSS protection
+5. Configure session management to be stateless
+6. Set up exception handling for authentication failures
+
+## 5. Implement role-based access control [done]
+### Dependencies: 8.4
+### Description: Configure role-based authorization for different endpoints and implement method-level security
+### Details:
+1. Enable method security with @EnableGlobalMethodSecurity in SecurityConfig
+2. Configure antMatchers in SecurityFilterChain to restrict access based on roles
+3. Add @PreAuthorize annotations to controller methods for fine-grained access control
+4. Create custom access denied handler
+5. Implement role hierarchy if needed
+6. Test the complete authentication and authorization flow
+

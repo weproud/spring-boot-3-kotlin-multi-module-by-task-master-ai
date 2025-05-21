@@ -1,6 +1,6 @@
 # Task ID: 2
 # Title: Configure Spring Boot 3 and Kotlin
-# Status: pending
+# Status: done
 # Dependencies: 1
 # Priority: high
 # Description: Set up the project with Spring Boot 3.x and Kotlin 1.8+

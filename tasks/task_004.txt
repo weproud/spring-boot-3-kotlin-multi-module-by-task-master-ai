@@ -1,6 +1,6 @@
 # Task ID: 4
 # Title: Set up Database Configuration
-# Status: pending
+# Status: done
 # Dependencies: 2
 # Priority: high
 # Description: Configure PostgreSQL/H2 database connection and JPA
