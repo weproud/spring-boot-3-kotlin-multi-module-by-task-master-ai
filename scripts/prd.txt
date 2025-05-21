@@ -1,5 +1,9 @@
 # Spring Boot 3 Kotlin 애플리케이션 개발 PRD
 
+## task-master ai 참고사항 
+- task는 한글로 작성한다
+- 요청한 task에 대해서만 expand하여 task를 생성한다.
+
 ## 프로젝트 개요
 이 프로젝트는 Spring Boot 3와 Kotlin을 사용하여 현대적인 웹 애플리케이션을 개발하는 것을 목표로 합니다. 
 RESTful API를 제공하고, 데이터베이스와 연동하며, 보안 기능을 갖춘 애플리케이션을 구현합니다.
@@ -9,7 +13,7 @@ RESTful API를 제공하고, 데이터베이스와 연동하며, 보안 기능�
 - Kotlin 1.8+
 - Spring Data JPA
 - Spring Security
-- PostgreSQL/H2 데이터베이스
+- MySQL/H2 데이터베이스
 - Gradle 빌드 시스템
 - JUnit 5 테스트 프레임워크
 - Swagger/OpenAPI 문서화
@@ -77,33 +81,55 @@ RESTful API를 제공하고, 데이터베이스와 연동하며, 보안 기능�
 
 ## 핵심 기능 요구사항
 
-### 1. Gradle Multi Module 설계
+### [task-1] Gradle Multi Module 설계
 
-- Gradle Multi Module 구조 만들기
+프로젝트는 다음과 같은 멀티 모듈 구조로 구성되어 있습니다:
+이 구조는 관심사 분리와 모듈화를 통해 코드의 재사용성과 유지보수성을 높이는 방식으로 설계되어 있습니다.
 
+주요 모듈 구조
 ```
-tree -Ld 3 .
 .
-├── app
-│   ├── app-api                # api
-│   ├── app-admin-api          # admin-api
-├── core                       # core
-├── docs
-├── domain
-│   ├── common
-│   └── rds                    # Entity, Repository
-├── framework
-│   ├── client                 # Http Client
-│   │   ├── ai
-│   │   ├── base               # WebClient 공통 설정
-│   │   └── kakao
-│   ├── provider
-│   │   └── jwt                # Jwt Provider 
-│   └── redis
-└── http                       # xxx.http 파일
-    ├── admin
-    ├── teacher
-    └── user
+├── app                       # 실행 가능한 애플리케이션
+│   ├── app-api               # API 서버 애플리케이션
+│   ├── app-batch             # 배치 처리 애플리케이션
+├── core                      # 공통 유틸리티 및 핵심 기능
+├── domain                    # 도메인 모듈
+│   └── rds                   # Spring Data JPA 관련 모듈
+├── framework                 # 프레임워크 관련 모듈
+│   ├── client                # HTTP 클라이언트
+│   │   ├── base              # 기본 클라이언트 기능
+│   │   ├── build             # 빌드 관련
+│   │   └── kakao             # 카카오 API 클라이언트
+│   ├── provider              # 서비스 제공자
+│   │   ├── auth              # 인증 관련
+│   │   └── jwt               # JWT 관련
+│   └── redis                 # Redis 관련
+├── http                      # HTTP 테스트 파일
+│   └── api                   # API 테스트
 ```
 
+각 모듈의 역할
+1. app: 실행 가능한 애플리케이션 모듈
+1.1 app-api: 주요 API 서버 (현재 활성화된 모듈)
+1.2 app-batch: 배치 작업 처리
 
+2. core: 공통 유틸리티 및 핵심 기능
+2.1 프로젝트 전반에서 사용되는 공통 기능 제공
+2.2 Jackson 모듈 등 기본 의존성 포함
+2.3 domain: 도메인 관련 모듈
+
+3. rds: Spring Data JPA 관련 모듈
+3.1 Entity, Repository 등 데이터베이스 관련 클래스 포함
+
+4. framework: 프레임워크 관련 모듈
+4.1 client: HTTP 클라이언트
+4.1.1 base: 기본 클라이언트 기능
+4.1.1 kakao: 카카오 API 클라이언트
+4.2 provider: 서비스 제공자
+4.2.1 jwt: JWT 인증 관련
+4.2.2 redis: Redis 캐싱 관련
+
+5. http: HTTP 테스트 파일
+API 테스트를 위한 HTTP 파일 모음
+
+이 구조는 관심사 분리와 모듈화를 통해 코드의 재사용성과 유지보수성을 높이는 방식으로 설계되어 있습니다.
