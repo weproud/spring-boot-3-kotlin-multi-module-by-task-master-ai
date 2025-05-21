@@ -36,7 +36,7 @@ plugins {
 }
 
 allprojects {
-    group = "com.example"
+    group = "com.weproud"
     version = "0.0.1-SNAPSHOT"
     
     repositories {
@@ -175,7 +175,7 @@ tasks.jar { enabled = true }
 ```
 
 # Subtasks:
-## 1. 루트 프로젝트 설정 파일 생성 [pending]
+## 1. 루트 프로젝트 설정 파일 생성 [done]
 ### Dependencies: None
 ### Description: 프로젝트의 루트 설정 파일인 settings.gradle.kts와 build.gradle.kts를 생성하고 플러그인 관리 및 공통 설정을 구성합니다.
 ### Details:
@@ -187,7 +187,7 @@ tasks.jar { enabled = true }
 프로젝트의 루트 설정 파일인 settings.gradle.kts와 build.gradle.kts를 생성하고 플러그인 관리 및 공통 설정을 구성합니다.
 </info added on 2025-05-21T05:26:31.927Z>
 
-## 2. Core 모듈 구현 [pending]
+## 2. Core 모듈 구현 [done]
 ### Dependencies: 1.1
 ### Description: 다른 모듈에서 공통으로 사용되는 유틸리티, 확장 함수 및 기본 컴포넌트를 포함하는 Core 모듈을 생성하고 구성합니다.
 ### Details:
