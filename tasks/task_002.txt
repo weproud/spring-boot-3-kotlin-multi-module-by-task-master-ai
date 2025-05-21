@@ -1,0 +1,16 @@
+# Task ID: 2
+# Title: Configure Spring Boot 3 and Kotlin
+# Status: pending
+# Dependencies: 1
+# Priority: high
+# Description: Set up the project with Spring Boot 3.x and Kotlin 1.8+
+# Details:
+In the root build.gradle.kts:
+1. Set up Kotlin plugin
+2. Configure Spring Boot version 3.x
+3. Set Kotlin version to 1.8+
+4. Configure Kotlin compiler options
+5. Add necessary Spring Boot dependencies
+
+# Test Strategy:
+Create a simple 'Hello World' endpoint and test it to ensure the basic Spring Boot setup is working correctly.

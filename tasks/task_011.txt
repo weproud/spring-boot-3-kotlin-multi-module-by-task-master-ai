@@ -1,0 +1,15 @@
+# Task ID: 11
+# Title: Implement Pagination and Sorting
+# Status: pending
+# Dependencies: 6, 7
+# Priority: medium
+# Description: Add pagination and sorting capabilities to relevant API endpoints
+# Details:
+1. Modify repository methods to accept Pageable parameter
+2. Update service methods to handle pagination
+3. Modify API controllers to accept page and size parameters
+4. Implement sorting functionality
+5. Create a PagedResponse DTO for standardized paged responses
+
+# Test Strategy:
+Write integration tests to verify pagination and sorting functionality, test edge cases like page out of bounds.

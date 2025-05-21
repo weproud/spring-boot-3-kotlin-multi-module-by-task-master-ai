@@ -1,0 +1,15 @@
+# Task ID: 4
+# Title: Set up Database Configuration
+# Status: pending
+# Dependencies: 2
+# Priority: high
+# Description: Configure PostgreSQL/H2 database connection and JPA
+# Details:
+1. Add PostgreSQL and H2 dependencies
+2. Configure datasource properties in application.properties/yml
+3. Set up JPA configuration
+4. Create a configuration class for different environments (dev, test, prod)
+5. Implement database migration strategy using a tool like Flyway
+
+# Test Strategy:
+Write integration tests to verify database connection and basic CRUD operations using Spring Data JPA.

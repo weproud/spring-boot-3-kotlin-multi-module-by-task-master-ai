@@ -1,0 +1,16 @@
+# Task ID: 6
+# Title: Implement RESTful API Controllers
+# Status: pending
+# Dependencies: 3, 5
+# Priority: high
+# Description: Create RESTful API controllers adhering to REST principles
+# Details:
+1. Create controller classes in the app-api module
+2. Implement CRUD operations
+3. Use appropriate HTTP methods and status codes
+4. Implement request/response DTOs
+5. Add input validation using Bean Validation
+6. Implement error handling and response standardization
+
+# Test Strategy:
+Write unit tests for controllers and integration tests for API endpoints using MockMvc or TestRestTemplate.

@@ -14,37 +14,6 @@ RESTful API를 제공하고, 데이터베이스와 연동하며, 보안 기능�
 - JUnit 5 테스트 프레임워크
 - Swagger/OpenAPI 문서화
 
-## 핵심 기능 요구사항
-
-### 1. 사용자 관리 시스템
-- 사용자 등록, 로그인, 로그아웃 기능
-- 역할 기반 접근 제어(RBAC)
-- JWT 기반 인증 시스템
-- 비밀번호 암호화 및 보안 처리
-
-### 2. 상품 관리 시스템
-- 상품 CRUD 기능
-- 카테고리별 상품 분류
-- 상품 검색 및 필터링
-- 상품 이미지 업로드 및 관리
-
-### 3. 주문 처리 시스템
-- 장바구니 기능
-- 주문 생성 및 관리
-- 결제 처리 연동
-- 주문 상태 추적
-
-### 4. 리뷰 및 평점 시스템
-- 상품 리뷰 작성 및 관리
-- 평점 시스템
-- 리뷰 필터링 및 정렬
-
-### 5. 관리자 대시보드
-- 사용자 관리
-- 상품 관리
-- 주문 관리
-- 통계 및 보고서
-
 ## 기술적 요구사항
 
 ### 1. 아키텍처
@@ -104,3 +73,37 @@ RESTful API를 제공하고, 데이터베이스와 연동하며, 보안 기능�
 - 코드 품질 및 테스트 커버리지 목표 달성
 - 보안 취약점 없음
 - 성능 요구사항 충족
+
+
+## 핵심 기능 요구사항
+
+### 1. Gradle Multi Module 설계
+
+- Gradle Multi Module 구조 만들기
+
+```
+tree -Ld 3 .
+.
+├── app
+│   ├── app-api                # api
+│   ├── app-admin-api          # admin-api
+├── core                       # core
+├── docs
+├── domain
+│   ├── common
+│   └── rds                    # Entity, Repository
+├── framework
+│   ├── client                 # Http Client
+│   │   ├── ai
+│   │   ├── base               # WebClient 공통 설정
+│   │   └── kakao
+│   ├── provider
+│   │   └── jwt                # Jwt Provider 
+│   └── redis
+└── http                       # xxx.http 파일
+    ├── admin
+    ├── teacher
+    └── user
+```
+
+
