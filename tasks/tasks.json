@@ -1,0 +1,108 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Gradle Multi Module 설계",
+      "description": "Spring Boot 3와 Kotlin을 사용하는 애플리케이션의 Gradle 멀티 모듈 구조를 설계하고 구현합니다. 관심사 분리와 모듈화를 통해 코드의 재사용성과 유지보수성을 높이는 구조를 만듭니다.",
+      "status": "pending",
+      "dependencies": [],
+      "priority": "high",
+      "details": "1. 프로젝트 루트에 settings.gradle.kts 파일 생성 및 설정\n```kotlin\nrootProject.name = \"spring-boot-3-kotlin-app\"\n\ninclude(\n    \"app:app-api\",\n    \"app:app-batch\",\n    \"core\",\n    \"domain:rds\",\n    \"framework:client:base\",\n    \"framework:client:build\",\n    \"framework:client:kakao\",\n    \"framework:provider:auth\",\n    \"framework:provider:jwt\",\n    \"framework:redis\"\n)\n```\n\n2. 루트 build.gradle.kts 파일 설정\n```kotlin\nimport org.jetbrains.kotlin.gradle.tasks.KotlinCompile\n\nplugins {\n    id(\"org.springframework.boot\") version \"3.1.0\" apply false\n    id(\"io.spring.dependency-management\") version \"1.1.0\" apply false\n    kotlin(\"jvm\") version \"1.8.21\"\n    kotlin(\"plugin.spring\") version \"1.8.21\" apply false\n    kotlin(\"plugin.jpa\") version \"1.8.21\" apply false\n}\n\nallprojects {\n    group = \"com.example\"\n    version = \"0.0.1-SNAPSHOT\"\n    \n    repositories {\n        mavenCentral()\n    }\n}\n\nsubprojects {\n    apply(plugin = \"kotlin\")\n    \n    dependencies {\n        implementation(\"org.jetbrains.kotlin:kotlin-reflect\")\n        implementation(\"org.jetbrains.kotlin:kotlin-stdlib-jdk8\")\n        \n        testImplementation(\"org.junit.jupiter:junit-jupiter:5.9.2\")\n        testRuntimeOnly(\"org.junit.platform:junit-platform-launcher\")\n    }\n    \n    tasks.withType<KotlinCompile> {\n        kotlinOptions {\n            freeCompilerArgs = listOf(\"-Xjsr305=strict\")\n            jvmTarget = \"17\"\n        }\n    }\n    \n    tasks.withType<Test> {\n        useJUnitPlatform()\n    }\n}\n```\n\n3. 각 모듈별 build.gradle.kts 파일 생성\n\n- app/app-api/build.gradle.kts\n```kotlin\nplugins {\n    id(\"org.springframework.boot\")\n    id(\"io.spring.dependency-management\")\n    kotlin(\"plugin.spring\")\n}\n\ndependencies {\n    implementation(project(\":core\"))\n    implementation(project(\":domain:rds\"))\n    implementation(project(\":framework:provider:jwt\"))\n    implementation(project(\":framework:redis\"))\n    \n    implementation(\"org.springframework.boot:spring-boot-starter-web\")\n    implementation(\"org.springframework.boot:spring-boot-starter-validation\")\n    implementation(\"org.springframework.boot:spring-boot-starter-security\")\n    implementation(\"com.fasterxml.jackson.module:jackson-module-kotlin\")\n    implementation(\"org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0\")\n    \n    testImplementation(\"org.springframework.boot:spring-boot-starter-test\")\n    testImplementation(\"org.springframework.security:spring-security-test\")\n}\n```\n\n- core/build.gradle.kts\n```kotlin\nplugins {\n    id(\"org.springframework.boot\") apply false\n    id(\"io.spring.dependency-management\")\n    kotlin(\"plugin.spring\")\n}\n\ndependencies {\n    api(\"org.springframework.boot:spring-boot-starter\")\n    api(\"com.fasterxml.jackson.module:jackson-module-kotlin\")\n    api(\"org.jetbrains.kotlinx:kotlinx-coroutines-core\")\n}\n\ntasks.bootJar { enabled = false }\ntasks.jar { enabled = true }\n```\n\n- domain/rds/build.gradle.kts\n```kotlin\nplugins {\n    id(\"org.springframework.boot\") apply false\n    id(\"io.spring.dependency-management\")\n    kotlin(\"plugin.spring\")\n    kotlin(\"plugin.jpa\")\n}\n\ndependencies {\n    implementation(project(\":core\"))\n    \n    api(\"org.springframework.boot:spring-boot-starter-data-jpa\")\n    runtimeOnly(\"com.mysql:mysql-connector-j\")\n    runtimeOnly(\"com.h2database:h2\")\n    \n    testImplementation(\"org.springframework.boot:spring-boot-starter-test\")\n}\n\ntasks.bootJar { enabled = false }\ntasks.jar { enabled = true }\n```\n\n4. 각 모듈 디렉토리 구조 생성\n- 각 모듈 디렉토리에 src/main/kotlin 및 src/test/kotlin 디렉토리 생성\n- 각 모듈에 필요한 패키지 구조 생성\n\n5. 모듈 간 의존성 관리\n- 순환 의존성이 발생하지 않도록 의존성 그래프 설계\n- 상위 모듈은 하위 모듈에 의존할 수 있지만, 하위 모듈은 상위 모듈에 의존하지 않도록 설계\n\n6. 공통 설정 및 유틸리티 클래스 구현\n- core 모듈에 공통으로 사용되는 유틸리티 클래스 및 확장 함수 구현\n- 각 모듈에서 필요한 설정 클래스 구현",
+      "testStrategy": "1. 모듈 구조 검증\n- 각 모듈이 올바르게 구성되었는지 확인\n- 모듈 간 의존성이 올바르게 설정되었는지 확인\n\n2. 빌드 검증\n- Gradle 빌드 명령어를 실행하여 전체 프로젝트가 오류 없이 빌드되는지 확인\n```bash\n./gradlew clean build\n```\n\n3. 모듈별 단위 테스트\n- 각 모듈의 핵심 기능에 대한 단위 테스트 작성 및 실행\n- 테스트 커버리지 확인\n\n4. 통합 테스트\n- 모듈 간 통합 테스트를 통해 의존성 문제가 없는지 확인\n- app-api 모듈을 실행하여 전체 애플리케이션이 정상적으로 동작하는지 확인\n\n5. 모듈 독립성 테스트\n- 각 모듈이 독립적으로 빌드되고 테스트될 수 있는지 확인\n```bash\n./gradlew :core:test\n./gradlew :domain:rds:test\n```",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "루트 프로젝트 설정 파일 생성",
+          "description": "프로젝트의 루트 설정 파일인 settings.gradle.kts와 build.gradle.kts를 생성하고 플러그인 관리 및 공통 설정을 구성합니다.",
+          "dependencies": [],
+          "details": "1. Create settings.gradle.kts with the project name and module includes\n2. Set up root build.gradle.kts with Kotlin and Spring Boot plugin versions\n3. Configure common settings for all subprojects including Kotlin compiler options\n4. Set up repositories and basic dependencies for all modules\n<info added on 2025-05-21T05:26:31.927Z>\n프로젝트의 루트 설정 파일인 settings.gradle.kts와 build.gradle.kts를 생성하고 플러그인 관리 및 공통 설정을 구성합니다.\n</info added on 2025-05-21T05:26:31.927Z>",
+          "status": "pending",
+          "testStrategy": "Verify that Gradle can successfully sync the project structure and resolve all dependencies"
+        },
+        {
+          "id": 2,
+          "title": "Core 모듈 구현",
+          "description": "다른 모듈에서 공통으로 사용되는 유틸리티, 확장 함수 및 기본 컴포넌트를 포함하는 Core 모듈을 생성하고 구성합니다.",
+          "dependencies": [
+            1
+          ],
+          "details": "1. Create core/build.gradle.kts with appropriate plugins and dependencies\n2. Disable bootJar and enable jar tasks\n3. Set up directory structure (src/main/kotlin, src/test/kotlin)\n4. Implement common utility classes, extension functions, and base components\n5. Create base exception classes and common DTOs",
+          "status": "pending",
+          "testStrategy": "Write unit tests for utility functions and ensure the module can be built independently"
+        },
+        {
+          "id": 3,
+          "title": "Domain RDS 모듈 구현",
+          "description": "데이터베이스 엔티티, 레포지토리 및 JPA 설정을 위한 Domain RDS 모듈을 구성합니다.",
+          "dependencies": [
+            2
+          ],
+          "details": "1. Create domain/rds/build.gradle.kts with JPA and database dependencies\n2. Configure JPA entities with appropriate annotations\n3. Implement repository interfaces extending Spring Data repositories\n4. Set up test configurations with H2 database\n5. Configure entity mappings and relationships",
+          "status": "pending",
+          "testStrategy": "Create repository tests using TestEntityManager and H2 in-memory database"
+        },
+        {
+          "id": 4,
+          "title": "Framework Client 모듈 구현",
+          "description": "외부 API 통합을 위한 Framework Client 모듈(base, build, kakao)을 생성합니다.",
+          "dependencies": [
+            2
+          ],
+          "details": "1. Set up build.gradle.kts files for each client module\n2. Implement the base client module with common HTTP client configurations\n3. Create the build client module with client factory patterns\n4. Implement the Kakao client module with specific API integrations\n5. Configure proper error handling and response mapping",
+          "status": "pending",
+          "testStrategy": "Use MockWebServer to test HTTP client behavior and response handling"
+        },
+        {
+          "id": 5,
+          "title": "Framework Provider 모듈 구현",
+          "description": "인증 및 권한 부여를 위한 Framework Provider 모듈(auth, jwt)을 생성합니다.",
+          "dependencies": [
+            2
+          ],
+          "details": "1. Set up build.gradle.kts files for auth and jwt modules\n2. Implement JWT generation, validation, and parsing in the jwt module\n3. Create authentication providers and security configurations in the auth module\n4. Implement user details service and security filters\n5. Configure proper exception handling for authentication failures",
+          "status": "pending",
+          "testStrategy": "Write unit tests for JWT operations and integration tests for authentication flows"
+        },
+        {
+          "id": 6,
+          "title": "Framework Redis 모듈 구현",
+          "description": "캐싱 및 분산 데이터 저장을 위한 Redis 모듈을 생성합니다.",
+          "dependencies": [
+            2
+          ],
+          "details": "1. Create framework/redis/build.gradle.kts with Redis dependencies\n2. Implement Redis configuration classes\n3. Create Redis repositories and template wrappers\n4. Implement serialization/deserialization for Redis data\n5. Configure cache managers and TTL settings",
+          "status": "pending",
+          "testStrategy": "Use embedded Redis for testing cache operations and repository functions"
+        },
+        {
+          "id": 7,
+          "title": "App API 모듈 구현",
+          "description": "컨트롤러, 서비스 및 API 문서화가 포함된 메인 API 애플리케이션 모듈을 생성합니다.",
+          "dependencies": [
+            3,
+            4,
+            5,
+            6
+          ],
+          "details": "1. Create app/app-api/build.gradle.kts with web dependencies\n2. Implement main application class with proper component scanning\n3. Create controller classes with endpoint mappings\n4. Implement service layer with business logic\n5. Configure OpenAPI documentation\n6. Set up security configurations for API endpoints",
+          "status": "pending",
+          "testStrategy": "Write controller tests using MockMvc and service tests with mocked dependencies"
+        },
+        {
+          "id": 8,
+          "title": "App Batch 모듈 구현",
+          "description": "예약 및 배치 처리 작업을 위한 배치 애플리케이션 모듈을 생성합니다.",
+          "dependencies": [
+            3,
+            4,
+            5,
+            6
+          ],
+          "details": "1. Create app/app-batch/build.gradle.kts with Spring Batch dependencies\n2. Implement batch job configurations and step definitions\n3. Create job launchers and schedulers\n4. Implement batch processors, readers, and writers\n5. Configure batch execution tracking and error handling\n6. Set up proper transaction management for batch operations",
+          "status": "pending",
+          "testStrategy": "Test batch jobs using JobLauncherTestUtils and verify job execution results"
+        }
+      ]
+    }
+  ]
+}
